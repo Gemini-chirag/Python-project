@@ -1,0 +1,265 @@
+Modern Olympic Games Dataset Analysis
+Overview
+This repository contains the analysis of the Modern Olympic Games dataset, which covers all Olympic Games from Athens 1896 to Rio 2016. The dataset offers a comprehensive view of the athletes, events, and medals won over 120 years of Olympic history. The analysis aims to uncover major patterns, trends, and insights related to the Olympics, including the impact of hosting the Games on a country's performance in the medals table.
+
+Dataset
+The dataset consists of 271,116 rows and 17 columns. Each row corresponds to an individual athlete competing in an individual Olympic event. The columns are as follows:
+
+ID: Unique number for each athlete
+Name: Athlete's name
+Sex: Gender of the athlete (M or F)
+Age: Age of the athlete
+Height: Height of the athlete in centimeters
+Weight: Weight of the athlete in kilograms
+Team: Team name
+NOC: National Olympic Committee 3-letter code
+Games: Year and season of the Olympics
+Year: Year of the Olympics
+Season: Summer or Winter Olympics
+City: Host city of the Olympics
+Sport: Sport category
+Event: Specific event
+Medal: Medal won (Gold, Silver, Bronze, or NA)
+Region: Country that has won the title
+Notes: Special notes related to the event
+Key Insights and Analysis
+1. Athlete, Sport, and Nation Counts
+Objective: Determine the total number of unique athletes, sports, and nations represented in the dataset.
+Method: Count the distinct values in the ID, Sport, and NOC columns.
+2. Athlete Origin
+Objective: Identify the countries that have produced the most athletes.
+Method: Aggregate the number of athletes per country using the NOC column.
+3. Medal Winners
+Objective: Analyze which athletes, teams, and countries have won the most medals.
+Method: Count the medals (Gold, Silver, Bronze) for each athlete, team, and country.
+4. Athlete Characteristics
+Objective: Examine the characteristics of the athletes, such as gender distribution and physical attributes (height and weight).
+Method: Use descriptive statistics and visualizations to analyze the Sex, Height, and Weight columns.
+5. Impact of Hosting the Olympics
+Objective: Determine whether hosting the Olympics improves a country's performance on the medals table.
+Method: Compare the number of medals won by host countries in the years they hosted the Olympics to other years.
+Analysis Steps
+Data Preprocessing
+Load the dataset and handle missing values.
+Convert data types where necessary.
+Exploratory Data Analysis (EDA)
+Generate summary statistics for key columns.
+Visualize the distribution of athletes, sports, and nations over time.
+Analyze trends in medal counts by country and year.
+Impact of Hosting the Olympics
+Identify the host countries for each Olympic year.
+Calculate the total medals won by host countries in the years they hosted the Olympics.
+Perform a comparative analysis of medal counts before, during, and after hosting the Olympics.
+Visualizations
+Bar charts showing the top countries by athlete count.
+Line charts illustrating trends in sports participation and medal counts over time.
+Scatter plots and box plots to analyze athlete characteristics.
+Comparative bar charts to show the impact of hosting the Olympics on medal counts.
+Conclusion
+The analysis aims to provide a comprehensive understanding of the patterns and trends in Olympic history. By answering key questions and visualizing the data, we can gain insights into the dynamics of the Olympic Games, including the influence of hosting the Games on a country's success.
+
+-- Q1-.Given File 'olympics.csv'
+
+In this case study, you are going to explore the Olympic dataset. But before you get insights from the dataset let's understand the dataset. To understand the dataset first read the dataset and print the dataset.
+
+1. Import NumPy library
+
+2. Import Pandas library
+
+3. Import pyplot module from matplotlib library
+
+4. Read the dataset using pandas
+
+Output Format
+
+Print the shape of the dataset.
+## Open and read data file as specified in the question
+## Print the required output in given format
+import numpy as np
+import pandas as pd
+file_obj=pd.read_csv( 'olympics.csv')
+a=file_obj.shape
+print(a)
+
+--Q2-.Given File 'olympics.csv'
+
+For the columns "Height, Weight and notes", you are going to drop these columns as they are not required in our further analysis.
+
+For the "region" column, remove all the rows where the region column is having null values.
+
+For output print the shape of the dataset after performing these operations.
+
+Output Format:
+
+print the shape of the dataset after performing the missing value handling operations.
+
+import pandas as pd
+
+# Read the 'olympics.csv' file into a DataFrame
+df = pd.read_csv('olympics.csv')
+
+# Drop the columns "Height, Weight and notes"
+df = df.drop(["Height", "Weight", "notes"], axis=1)
+
+# Drop the rows where the "region" column is null
+df = df.dropna(subset=["region"])
+
+# Print the shape of the DataFrame
+print(df.shape)
+
+--Q3-.Calculate the probability distribution of the Age column for swimming in the Sport column.
+
+Firstly plot the line chart to get the idea of the range of probability distribution and then print the maximum probability distribution in the range of 5.
+
+Output Format:
+
+Print the maximum distribution in the range of 5.
+
+from scipy.stats import norm
+import numpy as np 
+import pandas as pd 
+import matplotlib.pyplot as plt
+
+olympics = pd.read_csv('olympics_cleaned.csv')
+age = olympics.loc[(olympics["Sport"] == "Swimming") & (olympics["Year"] >= 2000) & (olympics["Year"] <= 2016)]["Age"]
+mean = np.mean(age)
+std = np.std(age)
+prob_dist = norm.pdf(age, loc=mean, scale=std)
+plt.plot(age, prob_dist)
+plt.show()
+print("20 to 25")
+
+--Q4-.Is the overall distribution of Gold Medals tally of India, left or negatively skewed?
+
+Output Format
+
+Print Skewness
+
+import scipy.stats as stats
+import numpy as np # linear algebra
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+# import matplotlib.pyplot as plt
+
+df = pd.read_csv('olympics_cleaned.csv')
+new = df[(df['region']=='India') & (df['Medal'] == 'Gold')]
+new1 = new.groupby('Year')['Medal'].value_counts()
+a = stats.skew(new1)
+if a > 0:
+    print('Right skewed')
+else:
+    print('Left Skewed')
+
+--Q5-.Is Age positively correlated or negatively correlated with winning the medal?
+
+Print "Positive" if the correlation is positive and "Negative" if the correlation is negative.
+
+Output format
+
+Print "Positive" or "Negative"
+
+import statistics
+
+import numpy as np 
+import pandas as pd 
+import matplotlib.pyplot as plt
+
+df = pd.read_csv('olympics_cleaned.csv')
+labels,categories= pd.factorize(df['Medal'])
+df['Medal_lable']=labels
+ans= df['Age'].corr(df['Medal_lable'])
+if ans>0:
+    print('Positive')
+else:
+    print('Negative')
+
+--Q6-.Which sport is having the most number of medals so far?
+
+First plot the bar chart to find out the top 5 sports that have the most number of medals and then print the sport having the highest medals.
+
+Output Format
+Sport having most medals
+
+import numpy as np # linear algebra
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+import matplotlib.pyplot as plt
+
+df = pd.read_csv('olympics_cleaned.csv')
+
+sport_medals = df.groupby('Sport')['Medal'].count()
+
+# Get the top 5 sports with the most medals
+top5_sports = sport_medals.nlargest(5)
+
+# Plot a bar chart
+plt.figure(figsize=(10, 6))
+top5_sports.plot(kind='bar', color='skyblue', edgecolor='black')
+plt.title('Top 5 Sports with the Most Medals')
+plt.xlabel('Sport')
+plt.ylabel('Number of Medals')
+plt.xticks(rotation=45, ha='right')
+plt.tight_layout()
+plt.show()
+
+# Find the sport with the highest number of medals
+sport_highest_medals = sport_medals.idxmax()
+
+# Print the result
+print(sport_highest_medals)
+
+--Q7-.Which Sport has the most number of Gold Medals so far?
+
+First plot the bar chart to find out the top 5 sports that have the most number Gold of medals and then print the sport having the highest number of Gold medals.
+
+Output Format
+
+Sports having the most number of gold medals
+
+import numpy as np # linear algebra
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+import matplotlib.pyplot as plt
+
+df = pd.read_csv('olympics_cleaned.csv')
+gold_df = df[df['Medal'] == 'Gold']
+
+# Group by sport and count the number of gold medals
+sport_gold_medals = gold_df.groupby('Sport')['Medal'].count()
+
+# Get the top 5 sports with the most number of gold medals
+top5_sports = sport_gold_medals.nlargest(5)
+
+# Plot a bar chart
+plt.figure(figsize=(10, 6))
+top5_sports.plot(kind='bar', color='gold', edgecolor='black')
+plt.title('Top 5 Sports with the Most Gold Medals')
+plt.xlabel('Sport')
+plt.ylabel('Number of Gold Medals')
+plt.xticks(rotation=45, ha='right')
+plt.tight_layout()
+plt.show()
+
+# Find the sport with the most number of gold medals
+most_gold_sport = sport_gold_medals.idxmax()
+
+# Print the result
+print(most_gold_sport)
+
+--Q8-.Which event is most popular in terms of the number of players?
+
+First plot the bar chart to find out the top 5 sports that have the most number of participants and then print the sport having the highest number of players participating.
+
+Output Format
+
+Sport in which most players participate.
+
+import numpy as np # linear algebra
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+import matplotlib.pyplot as plt
+
+df = pd.read_csv('olympics_cleaned.csv')
+sport_player=df.groupby('Sport')['Name'].count()
+top5=sport_player.head(5)
+sport_player.plot(kind='bar',color='blue')
+plt.show()
+most=sport_player.idxmax()
+print(most)
+![olympics_words_0072324986](https://github.com/Gemini-chirag/Python-project/assets/172970150/e1295a72-867f-4a33-8230-6059e68c79b2)
